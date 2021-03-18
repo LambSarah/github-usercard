@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { gsap } from "gsap";
 
 /*
   STEP 1: using axios, send a GET request to the following URL
@@ -44,21 +45,28 @@ axios.get('https://api.github.com/users/LambSarah')
 axios.get('https://api.github.com/users/LambSarah/following')
     .then(response => {
         let followers = response.data;
-        console.log(followers);
         followers.forEach((follower) => {
-            console.log(follower);
             axios.get(`https://api.github.com/users/${follower.login}`)
                 .then(response => {
                     let followerData = response.data;
                     let newCard = cardMaker(followerData);
                     cardsDiv.appendChild(newCard);
+                    //     let cards = document.getElementsByClassName('card-info');
+                    //               console.log(cards);
+                    //             let cardArray = Array.from(cards);
+                    //           cardArray.forEach((card) => {
+                    //                 let expBtn = document.g
+                    //               console.log(expBtn);
+                    //             expBtn.setEventListener("click", (event) => {
+
+                    //           });
                 })
                 .catch(error => console.log(error));
         });
     })
     .catch(err => {
         console.log(err);
-    });
+    })
 
 /*const followersArray =
     'mstolley',
@@ -113,7 +121,6 @@ function cardMaker({ avatar_url, name, login, location, html_url, followers, fol
     let userImg = document.createElement('img');
     userImg.src = avatar_url;
     newCard.prepend(userImg);
-    console.log(avatar_url);
 
     let cardInfo = document.createElement('div');
     cardInfo.classList.add('card-info');
@@ -151,6 +158,30 @@ function cardMaker({ avatar_url, name, login, location, html_url, followers, fol
     let userBio = document.createElement('p');
     userBio.textContent = bio;
     cardInfo.appendChild(userBio);
+    let index = 1;
+    newCard.id = index;
+    index++;
+
+    let expandButton = document.createElement('button');
+    expandButton.classList.add('btn');
+    expandButton.textContent = '+';
+    expandButton.addEventListener('click', (e) => {
+        newCard.classList.toggle('card--open');
+        let anim = gsap.to(newCard, {
+            duration: 1.5,
+            ease: "expo",
+            x: 150,
+            y: -200,
+            height: 750,
+        });
+        anim.play();
+        expandButton.textContent = '-';
+        expandButton.addEventListener('click', (e) => {
+            anim.reverse();
+            expandButton.textContent = "+";
+        });
+    });
+    cardInfo.appendChild(expandButton);
 
     return newCard;
 }
@@ -163,3 +194,5 @@ function cardMaker({ avatar_url, name, login, location, html_url, followers, fol
     luishrd
     bigknell
 */
+
+/* Look into adding more info as an expanding card. You will need to create some new CSS and a button that expands and contracts the card. */

@@ -41,7 +41,26 @@ axios.get('https://api.github.com/users/LambSarah')
     
     /* Instead of manually creating a list of followers, do it programmatically. Create a function that requests the followers data from the API after it has received your data and create a card for each of your followers. Hint: you can chain promises.*/
 
-const followersArray = [
+axios.get('https://api.github.com/users/LambSarah/following')
+    .then(response => {
+        let followers = response.data;
+        console.log(followers);
+        followers.forEach((follower) => {
+            console.log(follower);
+            axios.get(`https://api.github.com/users/${follower.login}`)
+                .then(response => {
+                    let followerData = response.data;
+                    let newCard = cardMaker(followerData);
+                    cardsDiv.appendChild(newCard);
+                })
+                .catch(error => console.log(error));
+        });
+    })
+    .catch(err => {
+        console.log(err);
+    });
+
+/*const followersArray =
     'mstolley',
     'hex337',
     'torvalds',
@@ -54,8 +73,8 @@ const followersArray = [
     'jukamonk',
     'ritschmaster'
 ];
-
-followersArray.forEach((follower) => {
+*/
+/*followersArray.forEach((follower) => {
     axios.get(`https://api.github.com/users/${follower}`)
         .then(res => {
             let newCard = cardMaker(res.data);
@@ -65,7 +84,7 @@ followersArray.forEach((follower) => {
             console.log(err);
         });
 });
-
+*/
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
     Using DOM methods and properties, create and return the following markup:

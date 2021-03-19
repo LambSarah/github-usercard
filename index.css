@@ -195,14 +195,6 @@ body {
     position: relative;
 }
 
-.card .card--open {
-    height: 700px;
-}
-
-.card .card--close {
-    height: auto;
-}
-
 .btn {
     font-size: 17px;
     font-weight: bold;
@@ -235,4 +227,14 @@ body {
     font-size: 1.8rem;
     font-style: italic;
     margin: 3px 0 10px;
+}
+
+.retracted {
+    display: none;
+}
+
+.expanded {
+    display: flex;
+    flex-direction: row;
+    font-size-adjust: 10px;
 }

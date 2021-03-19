@@ -112,9 +112,9 @@ axios.get('https://api.github.com/users/LambSarah/following')
       </div>
     </div>
 */
+let index = 1;
 
-
-function cardMaker({ avatar_url, name, login, location, html_url, followers, following, bio }) {
+function cardMaker({ avatar_url, name, login, location, html_url, followers, following, bio, public_repos, following_url }) {
     let newCard = document.createElement('div');
     newCard.classList.add('card');
 
@@ -141,10 +141,12 @@ function cardMaker({ avatar_url, name, login, location, html_url, followers, fol
     cardInfo.appendChild(userLocation);
 
     let userGithubUrl = document.createElement('a');
-    userGithubUrl.href = userGithubUrl.textContent = html_url;
+    userGithubUrl.href = `${html_url}`;
+    userGithubUrl.textContent = html_url;
 
     let userProfile = document.createElement('p');
-    userProfile.textContent = `Profile: ${userGithubUrl}`;
+    //userProfile.textContent = `Profile: ${userGithubUrl}`;
+    userProfile.innerHTML = `Profile: ${userGithubUrl}`;
     cardInfo.appendChild(userProfile);
 
     let userFollowers = document.createElement('p');
@@ -158,9 +160,34 @@ function cardMaker({ avatar_url, name, login, location, html_url, followers, fol
     let userBio = document.createElement('p');
     userBio.textContent = bio;
     cardInfo.appendChild(userBio);
-    let index = 1;
     newCard.id = index;
     index++;
+
+    let userPublicRepos = document.createElement('p');
+    userPublicRepos.classList.add('retracted');
+    userPublicRepos.textContent = `Public Repositories:${public_repos}`;
+    cardInfo.appendChild(userPublicRepos);
+
+    let followingUrl = document.createElement('p');
+    followingUrl.classList.add('retracted');
+    followingUrl.textContent = `See who I'm following: `;
+    let link = document.createElement('a');
+    link.href = `${html_url}?tab=following`;
+    link.textContent = `${login} follows`;
+    followingUrl.appendChild(link);
+    cardInfo.appendChild(followingUrl);
+
+    let followersUrl = document.createElement('p');
+    followersUrl.classList.add('retracted');
+    followersUrl.textContent = 'See my followers: ';
+    let followerLink = document.createElement('a');
+    followerLink.href = `${html_url}?tab=followers`;
+    followerLink.textContent = 'My followers';
+    followersUrl.appendChild(followerLink);
+    cardInfo.appendChild(followersUrl);
+
+
+
 
     let expandButton = document.createElement('button');
     expandButton.classList.add('btn');
@@ -168,7 +195,7 @@ function cardMaker({ avatar_url, name, login, location, html_url, followers, fol
     expandButton.addEventListener('click', (e) => {
         newCard.classList.toggle('card--open');
         let anim = gsap.to(newCard, {
-            duration: 1.5,
+            duration: 1,
             ease: "expo",
             x: 150,
             y: -200,
@@ -176,16 +203,24 @@ function cardMaker({ avatar_url, name, login, location, html_url, followers, fol
         });
         anim.play();
         expandButton.textContent = '-';
+        userPublicRepos.classList.remove('retracted');
+        followingUrl.classList.remove('retracted');
+        followersUrl.classList.remove("retracted");
+
+        userPublicRepos.classList.add('expanded');
         expandButton.addEventListener('click', (e) => {
             anim.reverse();
             expandButton.textContent = "+";
+            userPublicRepos.classList.add('retracted');
+            followingUrl.classList.add('retracted');
+            followersUrl.classList.add('retracted');
         });
     });
     cardInfo.appendChild(expandButton);
 
     return newCard;
-}
 
+}
 /*
   List of LS Instructors Github username's:
     tetondan

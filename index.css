@@ -155,7 +155,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 50px auto;
     padding: 30px;
     display: flex;
@@ -233,8 +233,7 @@ body {
     display: none;
 }
 
-.expanded {
-    display: flex;
-    flex-direction: row;
-    font-size-adjust: 10px;
+#graph {
+    width: 663px;
+    height: 104px;
 }

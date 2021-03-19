@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { gsap } from "gsap";
 
-/*
-  STEP 1: using axios, send a GET request to the following URL
+/*  STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
@@ -51,15 +50,6 @@ axios.get('https://api.github.com/users/LambSarah/following')
                     let followerData = response.data;
                     let newCard = cardMaker(followerData);
                     cardsDiv.appendChild(newCard);
-                    //     let cards = document.getElementsByClassName('card-info');
-                    //               console.log(cards);
-                    //             let cardArray = Array.from(cards);
-                    //           cardArray.forEach((card) => {
-                    //                 let expBtn = document.g
-                    //               console.log(expBtn);
-                    //             expBtn.setEventListener("click", (event) => {
-
-                    //           });
                 })
                 .catch(error => console.log(error));
         });
@@ -186,34 +176,47 @@ function cardMaker({ avatar_url, name, login, location, html_url, followers, fol
     followersUrl.appendChild(followerLink);
     cardInfo.appendChild(followersUrl);
 
-
+    let graphHolder = document.createElement('div');
+    cardInfo.appendChild(graphHolder);
+    graphHolder.classList.add('retracted');
+    let graphTitle = document.createElement('h3');
+    graphTitle.style.textAlign = 'center';
+    graphTitle.textContent = `${login}'s Contributions`;
+    graphHolder.appendChild(graphTitle);
+    let gitGraph = document.createElement('img');
+    gitGraph.src = `http://ghchart.rshah.org/${login}`;
+    gitGraph.id = 'graph';
+    gitGraph.style.padding = "20px 5px";
+    graphHolder.appendChild(gitGraph);
 
 
     let expandButton = document.createElement('button');
     expandButton.classList.add('btn');
     expandButton.textContent = '+';
     expandButton.addEventListener('click', (e) => {
-        newCard.classList.toggle('card--open');
         let anim = gsap.to(newCard, {
             duration: 1,
             ease: "expo",
-            x: 150,
-            y: -200,
-            height: 750,
+            x: 0,
+            y: 0,
+            width: 900,
+            height: 350,
         });
         anim.play();
         expandButton.textContent = '-';
         userPublicRepos.classList.remove('retracted');
         followingUrl.classList.remove('retracted');
         followersUrl.classList.remove("retracted");
+        graphHolder.classList.remove('retracted');
 
-        userPublicRepos.classList.add('expanded');
         expandButton.addEventListener('click', (e) => {
             anim.reverse();
             expandButton.textContent = "+";
             userPublicRepos.classList.add('retracted');
             followingUrl.classList.add('retracted');
             followersUrl.classList.add('retracted');
+            graphHolder.classList.add('retracted');
+            newCard.style.height = "190px";
         });
     });
     cardInfo.appendChild(expandButton);
@@ -221,13 +224,5 @@ function cardMaker({ avatar_url, name, login, location, html_url, followers, fol
     return newCard;
 
 }
-/*
-  List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
-*/
-
-/* Look into adding more info as an expanding card. You will need to create some new CSS and a button that expands and contracts the card. */
+/*Look into adding your GitHub contribution graph. There are a number of different ways of doing this, [this Stack Overflow discussion](https://stackoverflow.com/questions/34516592/embed-github-contributions-graph-in-website) will get you started.
+ */
